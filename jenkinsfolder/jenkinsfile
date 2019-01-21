@@ -1,0 +1,38 @@
+
+node
+{
+
+stage('Preparation')
+{
+git 'https://github.com/jayanthikr91/OurBank_modified'
+}
+stage ('mvn clean install command'){
+sh 'mvn clean install -Dv=${BUILD_NUMBER}'
+}
+ stage('SonarQube analysis') {
+    
+         sh 'mvn sonar:sonar -Dsonar.host.url=http://my40867dns.eastus2.cloudapp.azure.com' 
+     
+}
+stage('Artifactory upload')
+     	{
+		
+def server = Artifactory.newServer  url: "http://my16083dns.eastus2.cloudapp.azure.com:8081/artifactory",username:'admin',password:'password'
+def uploadSpec = """{
+ 	
+"files":[
+{
+"pattern":"target/*.war",
+
+"target":"repo/"
+}
+]
+}"""
+server.upload(uploadSpec)
+
+    }
+    stage ('Final deploy'){
+
+sh 'cp  /var/lib/jenkins/workspace/hello1/target/OurBank.war root@0875265726e6:/usr/local/tomcat/webapps'
+}
+}
