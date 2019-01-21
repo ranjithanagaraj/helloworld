@@ -35,13 +35,13 @@ server.upload(uploadSpec)
     }
  stage ('Final deploy'){
 
-sh ' cp  /var/lib/jenkins/workspace/sample3/target/form-1-SNAPSHOT-0.0.${BUILD_NUMBER}.war /var/lib/tomcat/webapps'
+sh 'cp  /var/lib/jenkins/workspace/hello1/target/*.war /var/lib/tomcat/webapps'
 }
 stage('email'){
-    emailext body: 'Build is successful', subject: 'email notification', to: 'sweetynmeghana@gmail.com'
+    emailext body: 'Build is successful', subject: 'email notification', to: 'Ranjitha.Nagaraj2@mindtree.com'
    }
    }catch(err){
-   emailext body: 'Build is failure', subject: 'failure', to: 'sweetynmeghana@gmail.com'
+   emailext body: 'Build is failure', subject: 'failure', to: 'Ranjitha.Nagaraj2@mindtree.com'
    
    }
    
