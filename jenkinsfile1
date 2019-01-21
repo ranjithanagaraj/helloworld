@@ -35,7 +35,7 @@ server.upload(uploadSpec)
     }
  stage ('Final deploy'){
 
-sh 'cp  /var/lib/jenkins/workspace/hello1/target/*.war /usr/local/tomcat/webapps'
+sh 'docker cp  /var/lib/jenkins/workspace/hello1/target/*.war  silly_hodgkin:/usr/local/tomcat/webapps'
 }
 stage('email'){
     emailext body: 'Build is successful', subject: 'email notification', to: 'Ranjitha.Nagaraj2@mindtree.com'
