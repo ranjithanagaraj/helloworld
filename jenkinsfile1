@@ -1,20 +1,22 @@
-
 node
 {
-
-stage('Preparation')
-{
-git 'https://github.com/jayanthikr91/OurBank_modified'
-}
-stage ('mvn clean install command'){
-sh 'mvn clean install -Dv=${BUILD_NUMBER}'
-}
- stage('SonarQube analysis') {
+    emailext body: 'Build is started', subject: 'email notification', to: 'Ranjitha.Nagaraj2@mindtree.com'
+    try{
     
+   stage('Preparation') 
+   { 
+      git 'https://github.com/ranjithanagaraj/HelloWorld-Program.git'
+
+   }
+   stage('Build')
+   {
+         sh 'mvn clean install -Dv=${BUILD_NUMBER}'
+   }
+   stage('SonarQube analysis') 
+    { 
          sh 'mvn sonar:sonar -Dsonar.host.url=http://my40867dns.eastus2.cloudapp.azure.com' 
-     
-}
-stage('Artifactory upload')
+     }
+     stage('Artifactory upload')
      	{
 		
 def server = Artifactory.newServer  url: "http://my16083dns.eastus2.cloudapp.azure.com:8081/artifactory",username:'admin',password:'password'
@@ -24,15 +26,23 @@ def uploadSpec = """{
 {
 "pattern":"target/*.war",
 
-"target":"repo/"
+"target":"artifact/"
 }
 ]
 }"""
 server.upload(uploadSpec)
 
     }
-    stage ('Final deploy'){
+ stage ('Final deploy'){
 
-sh 'cp  /var/lib/jenkins/workspace/hello1/target/OurBank.war root@0875265726e6:/usr/local/tomcat/webapps'
+sh ' cp  /var/lib/jenkins/workspace/sample3/target/form-1-SNAPSHOT-0.0.${BUILD_NUMBER}.war /var/lib/tomcat/webapps'
 }
+stage('email'){
+    emailext body: 'Build is successful', subject: 'email notification', to: 'sweetynmeghana@gmail.com'
+   }
+   }catch(err){
+   emailext body: 'Build is failure', subject: 'failure', to: 'sweetynmeghana@gmail.com'
+   
+   }
+   
 }
