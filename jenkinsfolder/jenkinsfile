@@ -33,6 +33,22 @@ def uploadSpec = """{
 server.upload(uploadSpec)
 
     }
+    
+    stage('Tomcat Installation ') {
+	def Install = false;
+	try {
+		input message: 'Install?', ok: 'Install'
+		Install = true
+		} catch (err) {
+	Install = false
+	
+	}
+	
+       if (Install){   
+	 
+	  sh docker run -d --name tom1 -p 9001:8080 tomcat
+        }
+    }	
  stage ('Final deploy'){
 
 sh 'docker cp  /var/lib/jenkins/workspace/hello1/target/*.war  silly_hodgkin:/usr/local/tomcat/webapps'
